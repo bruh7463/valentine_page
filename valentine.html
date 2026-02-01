@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💕</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe5f1 25%, #ffd4e8 50%, #ffc2de 75%, #ffb3d9 100%);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating hearts background */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, rgba(255, 105, 180, 0.1) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255, 182, 193, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px, 80px 80px;
+            background-position: 0 0, 40px 40px;
+            animation: floatPattern 20s linear infinite;
+        }
+
+        @keyframes floatPattern {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            padding: 2rem;
+            max-width: 90vw;
+        }
+
+        .question-container {
+            animation: fadeInScale 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(2rem, 8vw, 4.5rem);
+            color: #d63384;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 6px rgba(214, 51, 132, 0.2);
+            line-height: 1.3;
+            animation: slideInDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s backwards;
+        }
+
+        @keyframes slideInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #c2185b;
+            margin-bottom: 3rem;
+            font-weight: 600;
+            animation: fadeIn 1s ease-out 0.4s backwards;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .buttons-container {
+            position: relative;
+            height: 20vh;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .btn {
+            padding: 1.2rem 3rem;
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+            min-width: 140px;
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c2185b 100%);
+            color: white;
+            animation-delay: 0.6s;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-yes:hover {
+            border-radius: 50%;
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(194, 24, 91, 0.4);
+            animation: heartbeat 0.8s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1.1); }
+            25% { transform: scale(1.2); }
+            50% { transform: scale(1.1); }
+            75% { transform: scale(1.25); }
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #ffd4e8 0%, #ffb3d9 100%);
+            color: #c2185b;
+            animation-delay: 0.8s;
+            position: absolute;
+            transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .btn-no:hover {
+            transform: scale(1.05);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Success State */
+        .success-container {
+            display: none;
+            animation: celebrationEntry 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .success-container.active {
+            display: block;
+        }
+
+        @keyframes celebrationEntry {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) rotate(-10deg);
+            }
+            60% {
+                transform: scale(1.1) rotate(5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        .success-title {
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            color: #c2185b;
+            margin-bottom: 2rem;
+            text-shadow: 4px 4px 8px rgba(214, 51, 132, 0.3);
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .celebration-gif {
+            width: min(400px, 80vw);
+            height: auto;
+            border-radius: 20px;
+            margin: 2rem auto;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-3deg); }
+            75% { transform: rotate(3deg); }
+        }
+
+        .celebration-message {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: #d63384;
+            font-weight: 600;
+            margin-top: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff6b9d;
+            position: absolute;
+            animation: confettiFall 3s linear infinite;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .buttons-container {
+                flex-direction: column;
+                gap: 1.5rem;
+                height: auto;
+                min-height: 200px;
+            }
+
+            .btn {
+                width: 80%;
+                max-width: 300px;
+            }
+
+            .btn-no {
+                position: absolute;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Question State -->
+        <div id="questionContainer" class="question-container">
+            <h1>Will you be my Valentine?</h1>
+            <p class="subtitle">Choose wisely... 💕</p>
+            <div class="buttons-container" id="buttonsContainer">
+                <button class="btn btn-yes" id="yesBtn">Yes! 💖</button>
+                <button class="btn btn-no" id="noBtn">No</button>
+            </div>
+        </div>
+
+        <!-- Success State -->
+        <div id="successContainer" class="success-container">
+            <h1 class="success-title">YAY! I knew you'd say yes! ❤️</h1>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHY4MnI3OWE4ZWc0aXB0b2JlMXE0NjBkNXU5YnZpZ3VoOGNzYWJkZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/artj92V8o75VPL7AeQ/giphy.gif" 
+                 alt="Celebration" 
+                 class="celebration-gif">
+            <p class="celebration-message">
+                Get ready for the most amazing Valentine's Day ever! 🌹✨
+            </p>
+        </div>
+    </div>
+
+    <!-- Confetti Container -->
+    <div id="confettiContainer" class="confetti-container"></div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const questionContainer = document.getElementById('questionContainer');
+        const successContainer = document.getElementById('successContainer');
+        const buttonsContainer = document.getElementById('buttonsContainer');
+        const confettiContainer = document.getElementById('confettiContainer');
+
+        // Get button dimensions and container boundaries
+        function getRandomPosition() {
+            const containerRect = buttonsContainer.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            // Calculate safe boundaries (keeping button fully visible)
+            const maxX = window.innerWidth - btnRect.width - 40;
+            const maxY = window.innerHeight - btnRect.height - 40;
+            const minX = 20;
+            const minY = 20;
+            
+            // Generate random position
+            const randomX = Math.random() * (maxX - minX) + minX;
+            const randomY = Math.random() * (maxY - minY) + minY;
+            
+            return { x: randomX, y: randomY };
+        }
+
+        // Move "No" button away
+        function moveNoButton() {
+            const pos = getRandomPosition();
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = pos.x + 'px';
+            noBtn.style.top = pos.y + 'px';
+        }
+
+        // Desktop: Hover event
+        noBtn.addEventListener('mouseenter', moveNoButton);
+
+        // Mobile: Touch event (prevent tap)
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+
+        // "Yes" button click handler
+        yesBtn.addEventListener('click', () => {
+            // Hide question, show success
+            questionContainer.style.display = 'none';
+            successContainer.classList.add('active');
+            
+            // Create confetti
+            createConfetti();
+        });
+
+        // Confetti creation
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#c2185b', '#ffd4e8', '#ffb3d9', '#ff1744', '#f8bbd0'];
+            const confettiCount = 100;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    
+                    // Random shapes
+                    if (Math.random() > 0.5) {
+                        confetti.style.borderRadius = '50%';
+                    }
+                    
+                    confettiContainer.appendChild(confetti);
+                    
+                    // Remove after animation
+                    setTimeout(() => confetti.remove(), 5000);
+                }, i * 30);
+            }
+        }
+
+        // Initialize No button position on mobile
+        if (window.innerWidth <= 768) {
+            const containerRect = buttonsContainer.getBoundingClientRect();
+            noBtn.style.position = 'relative';
+        }
+    </script>
+</body>
+</html>
