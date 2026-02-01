@@ -167,13 +167,18 @@
             background: linear-gradient(135deg, #ffd4e8 0%, #ffb3d9 100%);
             color: #c2185b;
             animation-delay: 0.8s;
-            position: absolute;
+            position: relative;
             transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
             width: 140px;
             height: 60px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+        }
+        
+        .btn-no.moving {
+            position: fixed;
+            z-index: 1;
         }
 
         .btn-no:hover {
@@ -298,7 +303,10 @@
             .btn-no {
                 width: 200px;
                 height: 60px;
-                position: absolute;
+            }
+            
+            .btn-no.moving {
+                position: fixed;
             }
         }
     </style>
@@ -387,13 +395,43 @@
         // Move "No" button away
         function moveNoButton() {
             const pos = getRandomPosition();
-            noBtn.style.position = 'fixed';
+            noBtn.classList.add('moving');
             noBtn.style.left = pos.x + 'px';
             noBtn.style.top = pos.y + 'px';
         }
 
-        // Desktop: Hover event
-        noBtn.addEventListener('mouseenter', moveNoButton);
+        // Desktop: Check mouse proximity to No button
+        let isNoButtonMoving = false;
+        
+        document.addEventListener('mousemove', (e) => {
+            if (questionContainer.style.display === 'none') return; // Don't track if success screen is shown
+            
+            const noBtnRect = noBtn.getBoundingClientRect();
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            // Calculate distance from mouse to button center
+            const btnCenterX = noBtnRect.left + noBtnRect.width / 2;
+            const btnCenterY = noBtnRect.top + noBtnRect.height / 2;
+            
+            const distance = Math.sqrt(
+                Math.pow(mouseX - btnCenterX, 2) + 
+                Math.pow(mouseY - btnCenterY, 2)
+            );
+            
+            // If mouse gets within 100 pixels of the button, move it
+            const proximityThreshold = 100;
+            
+            if (distance < proximityThreshold && !isNoButtonMoving) {
+                isNoButtonMoving = true;
+                moveNoButton();
+                
+                // Reset flag after animation
+                setTimeout(() => {
+                    isNoButtonMoving = false;
+                }, 200);
+            }
+        });
 
         // Mobile: Touch event (prevent tap)
         noBtn.addEventListener('touchstart', (e) => {
@@ -436,12 +474,6 @@
                     setTimeout(() => confetti.remove(), 5000);
                 }, i * 30);
             }
-        }
-
-        // Initialize No button position on mobile
-        if (window.innerWidth <= 768) {
-            const containerRect = buttonsContainer.getBoundingClientRect();
-            noBtn.style.position = 'relative';
         }
     </script>
 </body>
