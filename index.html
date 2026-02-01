@@ -142,6 +142,11 @@
             animation-delay: 0.6s;
             position: relative;
             z-index: 2;
+            width: 140px;
+            height: 60px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-yes:hover {
@@ -164,6 +169,11 @@
             animation-delay: 0.8s;
             position: absolute;
             transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 140px;
+            height: 60px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-no:hover {
@@ -276,11 +286,18 @@
             }
 
             .btn {
-                width: 80%;
-                max-width: 300px;
+                width: 200px;
+                height: 60px;
             }
-
+            
+            .btn-yes {
+                width: 200px;
+                height: 60px;
+            }
+            
             .btn-no {
+                width: 200px;
+                height: 60px;
                 position: absolute;
             }
         }
@@ -323,18 +340,46 @@
 
         // Get button dimensions and container boundaries
         function getRandomPosition() {
-            const containerRect = buttonsContainer.getBoundingClientRect();
-            const btnRect = noBtn.getBoundingClientRect();
+            const noBtnRect = noBtn.getBoundingClientRect();
+            const yesBtnRect = yesBtn.getBoundingClientRect();
             
             // Calculate safe boundaries (keeping button fully visible)
-            const maxX = window.innerWidth - btnRect.width - 40;
-            const maxY = window.innerHeight - btnRect.height - 40;
+            const maxX = window.innerWidth - noBtnRect.width - 40;
+            const maxY = window.innerHeight - noBtnRect.height - 40;
             const minX = 20;
             const minY = 20;
             
-            // Generate random position
-            const randomX = Math.random() * (maxX - minX) + minX;
-            const randomY = Math.random() * (maxY - minY) + minY;
+            let randomX, randomY;
+            let attempts = 0;
+            const maxAttempts = 50;
+            
+            // Keep trying until we find a position that doesn't overlap with Yes button
+            do {
+                randomX = Math.random() * (maxX - minX) + minX;
+                randomY = Math.random() * (maxY - minY) + minY;
+                attempts++;
+                
+                // Check if the new position overlaps with Yes button
+                const wouldOverlap = !(
+                    randomX + noBtnRect.width < yesBtnRect.left ||
+                    randomX > yesBtnRect.right ||
+                    randomY + noBtnRect.height < yesBtnRect.top ||
+                    randomY > yesBtnRect.bottom
+                );
+                
+                // Also add some buffer space around Yes button
+                const buffer = 50; // pixels
+                const tooClose = (
+                    randomX < yesBtnRect.right + buffer &&
+                    randomX + noBtnRect.width > yesBtnRect.left - buffer &&
+                    randomY < yesBtnRect.bottom + buffer &&
+                    randomY + noBtnRect.height > yesBtnRect.top - buffer
+                );
+                
+                if (!wouldOverlap && !tooClose) {
+                    break;
+                }
+            } while (attempts < maxAttempts);
             
             return { x: randomX, y: randomY };
         }
