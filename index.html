@@ -95,6 +95,16 @@
             font-weight: 600;
             animation: fadeIn 1s ease-out 0.4s backwards;
         }
+        
+        .bait-text {
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            color: #d63384;
+            margin-top: 2rem;
+            font-weight: 600;
+            font-style: italic;
+            animation: fadeIn 1.2s ease-out 1s backwards;
+            opacity: 0.85;
+        }
 
         @keyframes fadeIn {
             0% { opacity: 0; }
@@ -315,12 +325,13 @@
     <div class="container">
         <!-- Question State -->
         <div id="questionContainer" class="question-container">
-            <h1>Will you be my Valentine?</h1>
+            <h1>Naomi, will you be my Valentine?</h1>
             <p class="subtitle">Choose wisely... 💕</p>
             <div class="buttons-container" id="buttonsContainer">
                 <button class="btn btn-yes" id="yesBtn">Yes! 💖</button>
                 <button class="btn btn-no" id="noBtn">No</button>
             </div>
+            <p class="bait-text">There's no refusing for me! 🙄</p>
         </div>
 
         <!-- Success State -->
